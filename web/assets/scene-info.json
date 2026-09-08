@@ -1,0 +1,29 @@
+{
+  "source_blend": "D:\\study\\codex-study\\agent-study\\blender-designer\\溪畔秋日_Countryside.blend",
+  "objects_exported": 442,
+  "draw_batches": 10,
+  "vertices": 75050,
+  "coordinate_system": "glTF Y-up (Blender x,z,-y)",
+  "camera": {
+    "position": [
+      -6.0,
+      12.0,
+      19.0
+    ]
+  },
+  "bridge": [
+    2.63,
+    0.95,
+    -5
+  ],
+  "puppy": [
+    -2.18,
+    0.29,
+    5.2
+  ],
+  "village": [
+    5.4,
+    2.0,
+    -24
+  ]
+}

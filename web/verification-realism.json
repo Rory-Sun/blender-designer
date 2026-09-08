@@ -1,0 +1,154 @@
+{
+  "checks": [
+    [
+      "running changes position",
+      true
+    ],
+    [
+      "articulated gait changes",
+      true
+    ],
+    [
+      "pause freezes puppy",
+      true
+    ],
+    [
+      "stop restores puppy",
+      true
+    ],
+    [
+      "window and roof geometry",
+      true
+    ]
+  ],
+  "errors": [],
+  "state": {
+    "ready": true,
+    "selected": "puppy",
+    "light": "sunset",
+    "motion": false,
+    "audio": false,
+    "frames": 72,
+    "fps": 14,
+    "error": null,
+    "quality": "high",
+    "is3D": true,
+    "camera": [
+      -2.8999999999999995,
+      1.6500000000000004,
+      8.599999999999998
+    ],
+    "target": [
+      -2.1799999999999997,
+      0.69,
+      5.199999999999999
+    ],
+    "ripples": 0,
+    "nature": {
+      "grass": 8208,
+      "rice": 2021,
+      "trees": 101,
+      "leafClusters": 17170,
+      "bushes": 2627,
+      "flowers": 320
+    },
+    "village": {
+      "houses": 7,
+      "roofTiles": 2244
+    },
+    "puppy": {
+      "running": false,
+      "position": [
+        -2.18,
+        0.29,
+        5.2
+      ],
+      "joints": [
+        {
+          "name": "body",
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "front_left",
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "front_left_knee",
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "front_right",
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "front_right_knee",
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "hind_left",
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "hind_left_knee",
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "hind_right",
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "hind_right_knee",
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "tail",
+          "rotation": [
+            0,
+            0,
+            -0.060470610231105074
+          ]
+        }
+      ]
+    },
+    "renderInfo": {
+      "calls": 31,
+      "triangles": 1271321
+    }
+  }
+}

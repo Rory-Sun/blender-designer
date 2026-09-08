@@ -1,0 +1,13 @@
+export class NatureAudio{
+ constructor(){this.context=null;this.enabled=false;this.timer=0;this.nodes=[];}
+ async toggle(){if(!this.context)this.create();if(this.context.state==='suspended')await this.context.resume();this.enabled=!this.enabled;this.master.gain.setTargetAtTime(this.enabled?.24:0,this.context.currentTime,.3);if(this.enabled)this.scheduleBird();else clearTimeout(this.timer);return this.enabled;}
+ create(){const A=window.AudioContext||window.webkitAudioContext;if(!A)throw new Error('AUDIO_UNAVAILABLE');this.context=new A();const c=this.context;this.master=c.createGain();this.master.gain.value=0;this.master.connect(c.destination);const buf=c.createBuffer(1,c.sampleRate*4,c.sampleRate),d=buf.getChannelData(0);let brown=0;for(let i=0;i<d.length;i++){brown=(brown+Math.random()*.04-.02)/1.018;d[i]=brown*4;}
+ const src=c.createBufferSource();src.buffer=buf;src.loop=true;const filter=c.createBiquadFilter();filter.type='lowpass';filter.frequency.value=1250;const gain=c.createGain();gain.gain.value=.42;src.connect(filter).connect(gain).connect(this.master);src.start();this.nodes.push(src);
+ const stream=c.createBuffer(1,c.sampleRate*3,c.sampleRate),v=stream.getChannelData(0);for(let i=0;i<v.length;i++)v[i]=(Math.random()*2-1)*.17;const source=c.createBufferSource();source.buffer=stream;source.loop=true;const f=c.createBiquadFilter();f.type='bandpass';f.frequency.value=2200;f.Q.value=.45;source.connect(f).connect(this.master);source.start();this.nodes.push(source);
+ }
+ scheduleBird(){if(!this.enabled)return;this.timer=setTimeout(()=>{this.bird();this.scheduleBird();},5000+Math.random()*9000);}
+ bird(){const c=this.context;if(!c||!this.enabled)return;for(let i=0;i<3;i++){const at=c.currentTime+i*.19,osc=c.createOscillator(),gain=c.createGain();osc.type='sine';osc.frequency.setValueAtTime(1900+i*140,at);osc.frequency.exponentialRampToValueAtTime(3100+i*100,at+.075);osc.frequency.exponentialRampToValueAtTime(2300,at+.15);gain.gain.setValueAtTime(0,at);gain.gain.linearRampToValueAtTime(.026,at+.02);gain.gain.exponentialRampToValueAtTime(.001,at+.17);osc.connect(gain).connect(this.master);osc.start(at);osc.stop(at+.18);}}
+ plop(){if(!this.enabled)return;const c=this.context,o=c.createOscillator(),g=c.createGain();o.frequency.setValueAtTime(500,c.currentTime);o.frequency.exponentialRampToValueAtTime(115,c.currentTime+.18);g.gain.setValueAtTime(.08,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.25);o.connect(g).connect(this.master);o.start();o.stop(c.currentTime+.3);}
+ suspend(){if(this.context&&this.enabled)this.context.suspend();}
+ resume(){if(this.context&&this.enabled)this.context.resume();}
+}

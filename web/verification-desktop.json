@@ -1,0 +1,45 @@
+{
+  "checks": [
+    [
+      "orbit",
+      true
+    ],
+    [
+      "zoom",
+      true
+    ],
+    [
+      "bridge navigation",
+      true
+    ],
+    [
+      "puppy hotspot",
+      true
+    ],
+    [
+      "pause",
+      true
+    ],
+    [
+      "audio",
+      true
+    ],
+    [
+      "day light",
+      true
+    ],
+    [
+      "mist light",
+      true
+    ],
+    [
+      "keyboard reset",
+      true
+    ],
+    [
+      "water ripple",
+      true
+    ]
+  ],
+  "errors": []
+}

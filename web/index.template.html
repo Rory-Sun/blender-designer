@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#101b17">
+<link rel="icon" href="data:,">
+<meta name="description" content="风经过稻田，水流过石桥。一幅可以暂停、感受微风的动态乡村画卷。">
+<title>溪畔秋日 · 山野之间</title>
+<style>
+:root{color-scheme:dark;--bg:#101b17;--text:#e8e5cf;--muted:#acb18d;--line:#485240;--accent:#b4b26a;--serif:"Noto Serif SC","Songti SC","STSong","SimSun",serif;--sans:system-ui,"Microsoft YaHei",sans-serif}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg)}body{color:var(--text);font-family:var(--serif);-webkit-font-smoothing:antialiased}button,input{font:inherit}button{color:inherit;cursor:pointer}button:focus-visible,input:focus-visible{outline:2px solid #dedaa5;outline-offset:6px}button{touch-action:manipulation}svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.35;stroke-linecap:round;stroke-linejoin:round}button svg{pointer-events:none}button:disabled{cursor:default;opacity:.5}
+.site-header{height:84px;margin:0 32px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding:0 14px}.brand{display:flex;align-items:center;gap:20px;font-size:26px;letter-spacing:.2em}.brand svg{height:43px;width:43px;color:var(--muted);stroke-width:.8}.header-note{font-size:14px;letter-spacing:.2em;color:var(--muted)}
+.gallery{min-height:calc(100svh - 84px);display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center;padding:24px 7.8% 18px}.intro{align-self:center;margin-top:-60px;padding-left:18px}.intro h1{font-size:clamp(40px,4.3vw,64px);font-weight:400;letter-spacing:.08em;margin:0 0 18px;line-height:1.3}.subtitle{font-family:Georgia,serif;color:var(--muted);font-size:13px;letter-spacing:.25em;margin:0;line-height:1.8}.description{font-size:19px;line-height:2.05;color:var(--muted);margin:43px 0 0}.wind-hint{margin-top:88px;display:flex;align-items:center;gap:18px;color:var(--muted);font-size:15px;letter-spacing:.08em}.wind-icon{display:grid;place-items:center;width:52px;height:52px;border:1px solid var(--muted);border-radius:50%}.wind-icon svg{width:28px;height:28px}.site-footer{position:fixed;bottom:28px;left:42px;font-size:14px;letter-spacing:.27em;color:var(--muted);pointer-events:none}
+.viewer{justify-self:center;max-width:100%;width:max-content;position:relative}.artwork{height:calc(100svh - 188px);max-height:1100px;max-width:100%;aspect-ratio:4/7;position:relative;overflow:hidden;background:#304137;border:1px solid #7b8571;border-radius:3px;box-shadow:0 18px 58px #0003;isolation:isolate}.artwork img,.artwork canvas{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:fill}.artwork img{z-index:0}.artwork #landscape{z-index:1;opacity:0;transition:opacity .3s}.artwork #particles{z-index:2;pointer-events:none}.artwork.ready #landscape{opacity:1}.artwork.loading::after{content:"正在唤醒风景…";position:absolute;left:0;right:0;bottom:20px;text-align:center;background:#101b1799;padding:12px;color:#eeeddb;font:13px var(--sans);z-index:3}.fallback-note{display:none;position:absolute;bottom:18px;left:12px;right:12px;z-index:3;text-align:center;background:#101b17c9;padding:8px;font:12px var(--sans)}.artwork.fallback .fallback-note{display:block}
+.controls{min-height:62px;display:flex;align-items:center;justify-content:space-between;gap:26px;padding-top:12px;white-space:nowrap;color:var(--text)}.control{border:0;background:transparent;display:inline-flex;align-items:center;gap:10px;padding:0;letter-spacing:.08em;font-size:15px;min-height:44px}.circle{width:43px;height:43px;display:grid;place-items:center;border:1px solid var(--muted);border-radius:50%;transition:background .2s,color .2s}.control:hover .circle{background:#b4b26a1c;color:#fffce7}.wind-control{display:flex;align-items:center;gap:15px;font-size:15px;letter-spacing:.08em}.wind-control input{width:clamp(85px,12vw,185px);height:28px;margin:0;appearance:none;-webkit-appearance:none;background:transparent;cursor:pointer;--value:55%}.wind-control input::-webkit-slider-runnable-track{height:2px;background:linear-gradient(to right,var(--accent) var(--value),var(--line) var(--value))}.wind-control input::-moz-range-track{height:2px;background:var(--line)}.wind-control input::-moz-range-progress{height:2px;background:var(--accent)}.wind-control input::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;height:17px;width:17px;border-radius:50%;background:var(--accent);border:1px solid #c7c581;margin-top:-7px;box-shadow:0 0 0 3px var(--bg)}.wind-control input::-moz-range-thumb{height:16px;width:16px;border-radius:50%;background:var(--accent);border:1px solid #c7c581}.expand-icon{order:2}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.viewer:fullscreen,.viewer.immersive{background:var(--bg);width:100%;height:100%;max-width:none;display:flex;align-items:center;justify-content:center;padding-bottom:70px}.viewer.immersive{position:fixed;inset:0;z-index:20}.viewer:fullscreen .artwork,.viewer.immersive .artwork{height:calc(100svh - 85px);max-height:none;width:auto;max-width:100vw}.viewer:fullscreen .controls,.viewer.immersive .controls{position:absolute;bottom:max(12px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:min(480px,calc(100% - 36px));padding-top:0}.viewer:fullscreen .wind-control input,.viewer.immersive .wind-control input{width:140px}body.is-immersive{overflow:hidden}
+body.embed .site-header,body.embed .intro,body.embed .site-footer{display:none}body.embed .gallery{display:flex;justify-content:center;min-height:100svh;padding:10px}body.embed .artwork{height:calc(100svh - 84px)}body.embed.no-controls .controls{display:none}body.embed.no-controls .gallery{padding:0}body.embed.no-controls .artwork{height:100svh;border:0;border-radius:0;box-shadow:none}
+@media(min-width:1700px){.gallery{padding-left:12%;padding-right:12%}.intro h1{font-size:68px}}
+@media(max-width:1000px) and (min-width:721px){.gallery{padding-left:4%;padding-right:4%;gap:20px}.intro{padding-left:10px}.intro h1{font-size:43px}.subtitle{font-size:10px;letter-spacing:.18em}.description{font-size:16px}.artwork{height:min(calc(100svh - 188px),65vw)}.controls{gap:12px}.wind-control{gap:8px}.wind-control input{width:90px}.control{gap:6px;font-size:13px}.circle{height:36px;width:36px}.site-footer{left:32px;font-size:12px}}
+@media(max-width:720px){.site-header{height:66px;margin:0 20px;padding:0}.brand{font-size:19px;gap:11px}.brand svg{width:30px;height:30px}.header-note{font-size:10px;letter-spacing:.05em}.gallery{display:flex;flex-direction:column;gap:24px;padding:30px 20px 25px;min-height:auto}.intro{padding:0;margin:0;align-self:flex-start}.intro h1{font-size:34px;margin-bottom:8px}.subtitle{font-size:9px;letter-spacing:.17em}.description{font-size:14px;line-height:1.8;margin:16px 0 0}.description br{display:none}.wind-hint{display:none}.viewer{width:min(100%,450px)}.artwork{width:100%;height:auto;max-height:none;aspect-ratio:4/7}.controls{gap:12px;min-height:60px;padding-top:12px}.control{font-size:13px;gap:8px}.circle{width:38px;height:38px}.wind-control{font-size:13px;gap:10px}.wind-control input{width:100px}.site-footer{position:static;text-align:center;font-size:11px;letter-spacing:.22em;margin:0 0 26px}.viewer:fullscreen .artwork,.viewer.immersive .artwork{width:auto;max-width:100vw;max-height:calc(100svh - 85px)}body.embed .gallery{padding:0 10px}body.embed .viewer{width:max-content;max-width:100%}body.embed .artwork{width:auto;max-width:calc(100vw - 20px);max-height:calc((100vw - 20px)*7/4)}body.embed .controls{gap:10px}body.embed.no-controls .artwork{max-width:100vw;max-height:175vw}}
+@media(max-width:380px){.controls{gap:8px}.wind-control{gap:8px}.wind-control input{width:75px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="site-header"><div class="brand"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 42V8c-1-9-14-7-14 1C1 8 0 21 10 23c-9 2-8 15 1 15 0 9 13 9 13-1M24 8c1-9 14-7 14 1 9-1 10 12 0 14 9 2 8 15-1 15 0 9-13 9-13-1M6 23h36"/></svg><span>山野之间</span></div><span class="header-note">一幅会呼吸的风景</span></header>
+<main class="gallery">
+<section class="intro" aria-labelledby="title"><h1 id="title">溪畔秋日</h1><p class="subtitle" lang="en">AN AFTERNOON BY THE CREEK</p><p class="description">风经过稻田，水流过石桥。<br>在这里，让时间慢一点。</p><div class="wind-hint"><span class="wind-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M4 13h17c8 0 7-10 2-8-2 1-2 3-1 4M4 18h22M7 23h11c5 0 5 7 1 7-2 0-3-2-2-3"/></svg></span><span>移动鼠标，感受微风</span></div></section>
+<section class="viewer" id="viewer" aria-label="溪畔秋日动态画卷">
+<div class="artwork loading" id="artwork"><img id="still" src="__SCENE_DATA__" alt="山脚民居与金色稻田，一座石板桥横跨溪流，小狗站在开满野花的路上回首。" fetchpriority="high"><canvas id="landscape" aria-hidden="true"></canvas><canvas id="particles" aria-hidden="true"></canvas><span class="fallback-note" id="fallback-note">当前设备显示静态画面</span></div>
+<div class="controls" aria-label="动效控制">
+<button class="control" id="toggle" type="button" aria-label="暂停动效" aria-pressed="false"><span class="circle"><svg id="play-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14"/></svg></span><span id="play-text">暂停</span></button>
+<label class="wind-control" for="wind"><span>微风</span><input id="wind" type="range" min="0" max="100" value="55" step="1" aria-label="动效强度" aria-valuetext="55%"><output class="sr-only" id="wind-value" for="wind">55%</output></label>
+<button class="control" id="fullscreen" type="button" aria-label="进入沉浸模式" aria-pressed="false"><span id="full-text">沉浸</span><span class="circle expand-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-7 7M10 20H4v-6M4 20l7-7"/></svg></span></button>
+</div><p class="sr-only" id="status" role="status" aria-live="polite">画面加载中</p>
+</section>
+</main><footer class="site-footer">溪流 · 稻香 · 好时光</footer>
+<script>
+(()=>{'use strict';
+const $=id=>document.getElementById(id),art=$('artwork'),canvas=$('landscape'),dust=$('particles'),viewer=$('viewer'),still=$('still');
+const params=new URLSearchParams(location.search);if(params.get('embed')==='1')document.body.classList.add('embed');if(params.get('controls')==='0')document.body.classList.add('no-controls');
+const media=matchMedia('(prefers-reduced-motion: reduce)');
+let playing=!media.matches,ready=false,strength=.55,elapsed=0,last=0,raf=0,renderedFrames=0,contextLost=false,gl=null,program=null,uniforms={},pointer={x:0,y:0},current={x:0,y:0};
+const ctx=dust.getContext('2d');
+const vertex=`attribute vec2 aPosition;varying vec2 vUv;void main(){vUv=aPosition*.5+.5;gl_Position=vec4(aPosition,0.,1.);}`;
+const fragment=`precision highp float;
+uniform sampler2D uImage;uniform sampler2D uMask;uniform float uTime;uniform float uStrength;uniform vec2 uPointer;varying vec2 vUv;
+void main(){
+ vec2 p=vec2(vUv.x,1.-vUv.y);
+ float a=uStrength;float t=uTime;
+ float zoom=1.+a*(.005+.003*sin(t*.13));
+ p=(p-.5)/zoom+.5+uPointer*vec2(.0025,.0015)*a;
+ vec3 m=texture2D(uMask,p).rgb;
+ float near=pow(p.y,1.5);float breeze=sin(t*1.45+p.x*17.+p.y*9.)*.66+sin(t*2.1+p.y*29.)*.34;
+ vec2 plant=vec2(breeze*(.0008+near*.0025),sin(t*1.2+p.x*21.)*.00035)*a*m.g;
+ vec2 flow=vec2(sin(p.y*300.-t*2.2+p.x*36.)*.0016,sin(p.x*100.+p.y*120.-t*2.5)*.00065)*a*m.r;
+ vec2 tail=vec2(sin(t*3.4)*.0034,cos(t*3.4)*.0005)*a*m.b;
+ vec2 q=p+plant+flow+tail;
+ vec3 shiftedMask=texture2D(uMask,q).rgb;
+ float stable=min(1.,dot(m,shiftedMask)*1.6+.12);
+ vec3 color=texture2D(uImage,p+(plant+flow+tail)*stable).rgb;
+ float wave=sin(p.y*430.-t*2.9+sin(p.x*72.+t*.3)*2.2)*.5+.5;
+ float glint=pow(wave,26.)*pow(.5+.5*sin(p.x*87.+sin(p.y*40.)*3.+t*.4),3.);
+ color+=vec3(.07,.09,.08)*glint*m.r*a*(.3+near);
+ color*=1.+a*(.008*sin(t*.45+p.y*8.)+.006*breeze*m.g);
+ gl_FragColor=vec4(color,1.);
+}`;
+function compile(type,source){const s=gl.createShader(type);gl.shaderSource(s,source);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(s));return s;}
+function texture(image,unit){const tx=gl.createTexture();gl.activeTexture(gl.TEXTURE0+unit);gl.bindTexture(gl.TEXTURE_2D,tx);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,false);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,image);}
+function initialize(mask){
+ gl=canvas.getContext('webgl',{alpha:false,antialias:false,depth:false,stencil:false,powerPreference:'low-power',preserveDrawingBuffer:true});
+ if(!gl)throw new Error('WEBGL_UNAVAILABLE');
+ program=gl.createProgram();gl.attachShader(program,compile(gl.VERTEX_SHADER,vertex));gl.attachShader(program,compile(gl.FRAGMENT_SHADER,fragment));gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(program));gl.useProgram(program);
+ const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]),gl.STATIC_DRAW);const at=gl.getAttribLocation(program,'aPosition');gl.enableVertexAttribArray(at);gl.vertexAttribPointer(at,2,gl.FLOAT,false,0,0);
+ for(const n of ['uImage','uMask','uTime','uStrength','uPointer'])uniforms[n]=gl.getUniformLocation(program,n);
+ texture(still,0);texture(mask,1);gl.uniform1i(uniforms.uImage,0);gl.uniform1i(uniforms.uMask,1);
+ ready=true;art.classList.remove('loading','fallback');art.classList.add('ready');resize();updateControls();schedule();
+}
+function resize(){const r=art.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,1.75,Math.sqrt(1400000/(r.width*r.height)));const w=Math.max(1,Math.round(r.width*dpr)),h=Math.max(1,Math.round(r.height*dpr));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;dust.width=w;dust.height=h;}if(ready&&!contextLost)render();}
+function particles(){if(!ctx)return;ctx.clearRect(0,0,dust.width,dust.height);if(!strength)return;const w=dust.width,h=dust.height;
+ for(let i=0;i<18;i++){const seed=i*2.399963,base=(i*.137)%1,x=(base+Math.sin(elapsed*.1+seed)*.04)*w,y=(.35+((i*.17+elapsed*.007*(.4+strength))%.65))*h,alpha=(.10+.14*Math.sin(elapsed*.9+seed))*strength;
+ ctx.fillStyle=`rgba(255,244,197,${Math.max(0,alpha)})`;ctx.beginPath();ctx.ellipse(x,y,Math.max(.65,w*.0014),Math.max(.8,w*.002),Math.sin(elapsed+seed),0,Math.PI*2);ctx.fill();}
+}
+function render(){if(!ready||contextLost)return;gl.viewport(0,0,canvas.width,canvas.height);gl.uniform1f(uniforms.uTime,elapsed);gl.uniform1f(uniforms.uStrength,strength*1.55);gl.uniform2f(uniforms.uPointer,current.x,current.y);gl.drawArrays(gl.TRIANGLES,0,6);particles();renderedFrames++;}
+function tick(now){raf=0;if(!playing||document.hidden||!ready||contextLost){last=0;return;}if(last&&now-last<1000/30){schedule();return;}const dt=last?Math.min((now-last)/1000,.1):0;last=now;elapsed+=dt;current.x+=(pointer.x-current.x)*.07;current.y+=(pointer.y-current.y)*.07;render();schedule();}
+function schedule(){if(!raf&&playing&&ready&&!document.hidden&&!contextLost)raf=requestAnimationFrame(tick);}
+function updateControls(){const active=playing&&ready;$('toggle').setAttribute('aria-label',active?'暂停动效':'播放动效');$('toggle').setAttribute('aria-pressed',String(!active));$('play-text').textContent=active?'暂停':'播放';$('play-icon').innerHTML=active?'<path d="M8 5v14M16 5v14"/>':'<path d="m8 5 11 7-11 7Z"/>';$('status').textContent=ready?(active?'动效播放中':'动效已暂停'):'画面加载中';document.body.dataset.playing=String(active);}
+function setPlaying(value){playing=Boolean(value);last=0;if(!playing&&raf){cancelAnimationFrame(raf);raf=0;}updateControls();schedule();}
+function setStrength(value){strength=Math.max(0,Math.min(1,Number(value)||0));const v=Math.round(strength*100);$('wind').value=v;$('wind').style.setProperty('--value',v+'%');$('wind').setAttribute('aria-valuetext',v+'%');$('wind-value').textContent=v+'%';if(!playing)render();}
+function fail(){ready=false;setPlaying(false);art.classList.remove('loading','ready');art.classList.add('fallback');$('toggle').disabled=true;$('wind').disabled=true;$('status').textContent='当前设备显示静态画面';}
+$('toggle').addEventListener('click',()=>setPlaying(!playing));$('wind').addEventListener('input',e=>setStrength(Number(e.target.value)/100));
+art.addEventListener('pointermove',e=>{const r=art.getBoundingClientRect();pointer.x=(e.clientX-r.left)/r.width-.5;pointer.y=(e.clientY-r.top)/r.height-.5;});art.addEventListener('pointerleave',()=>{pointer={x:0,y:0};});
+let immersiveFallback=false;
+function fullState(){const full=document.fullscreenElement===viewer||immersiveFallback;$('fullscreen').setAttribute('aria-pressed',String(full));$('fullscreen').setAttribute('aria-label',full?'退出沉浸模式':'进入沉浸模式');$('full-text').textContent=full?'退出':'沉浸';document.body.classList.toggle('is-immersive',full);resize();}
+async function fullscreen(){if(document.fullscreenElement===viewer){await document.exitFullscreen();return;}if(immersiveFallback){immersiveFallback=false;viewer.classList.remove('immersive');fullState();return;}try{if(!viewer.requestFullscreen)throw new Error('unavailable');await viewer.requestFullscreen();}catch{immersiveFallback=true;viewer.classList.add('immersive');fullState();}}
+$('fullscreen').addEventListener('click',fullscreen);document.addEventListener('fullscreenchange',fullState);
+document.addEventListener('keydown',e=>{if(e.code==='Escape'&&immersiveFallback){immersiveFallback=false;viewer.classList.remove('immersive');fullState();}if(e.code==='Space'&&!e.repeat&&!['INPUT','BUTTON','TEXTAREA'].includes(document.activeElement.tagName)){e.preventDefault();if(ready)setPlaying(!playing);}});
+document.addEventListener('visibilitychange',()=>{last=0;if(document.hidden&&raf){cancelAnimationFrame(raf);raf=0;}else schedule();});
+media.addEventListener('change',e=>{if(e.matches)setPlaying(false);});
+new ResizeObserver(resize).observe(art);
+canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();contextLost=true;if(raf)cancelAnimationFrame(raf);raf=0;art.classList.remove('ready');art.classList.add('fallback');$('fallback-note').textContent='画面恢复中…';});
+canvas.addEventListener('webglcontextrestored',()=>{contextLost=false;try{initialize(maskImage);}catch{fail();}});
+const maskImage=new Image();maskImage.src='__MASK_DATA__';
+Promise.all([still.decode(),maskImage.decode()]).then(()=>{try{initialize(maskImage);}catch{fail();}}).catch(fail);
+updateControls();
+window.countryside=Object.freeze({play:()=>setPlaying(true),pause:()=>setPlaying(false),setIntensity:setStrength,getState:()=>({ready,playing,strength,time:elapsed,frames:renderedFrames,webgl:!!gl,reducedMotion:media.matches,contextLost})});
+})();
+</script>
+</body>
+</html>
+

@@ -1,0 +1,88 @@
+{
+  "checks": [
+    [
+      "orbit",
+      true
+    ],
+    [
+      "zoom",
+      true
+    ],
+    [
+      "bridge navigation",
+      true
+    ],
+    [
+      "puppy hotspot",
+      true
+    ],
+    [
+      "pause",
+      true
+    ],
+    [
+      "audio",
+      true
+    ],
+    [
+      "day light",
+      true
+    ],
+    [
+      "mist light",
+      true
+    ],
+    [
+      "keyboard reset",
+      true
+    ],
+    [
+      "water ripple",
+      true
+    ],
+    [
+      "mobile layout",
+      true
+    ],
+    [
+      "mobile navigation",
+      true
+    ]
+  ],
+  "errors": [],
+  "state": {
+    "ready": true,
+    "selected": "rice",
+    "light": "sunset",
+    "motion": true,
+    "audio": false,
+    "frames": 100,
+    "fps": 22,
+    "error": null,
+    "quality": "balanced",
+    "is3D": true,
+    "camera": [
+      -9.5,
+      2.4499999999999997,
+      -3
+    ],
+    "target": [
+      -5.199999999999999,
+      0.88,
+      -14.8
+    ],
+    "ripples": 0,
+    "nature": {
+      "grass": 4622,
+      "rice": 1755,
+      "trees": 101,
+      "leafClusters": 10100,
+      "bushes": 1462,
+      "flowers": 180
+    },
+    "renderInfo": {
+      "calls": 22,
+      "triangles": 816367
+    }
+  }
+}

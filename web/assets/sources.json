@@ -1,0 +1,156 @@
+[
+  {
+    "source": "https://polyhaven.com/a/mossy_stone_wall",
+    "license": "CC0",
+    "asset": "mossy_stone_wall",
+    "maps": [
+      {
+        "channel": "color",
+        "file": "stone-color.jpg",
+        "bytes": 939649
+      },
+      {
+        "channel": "normal",
+        "file": "stone-normal.jpg",
+        "bytes": 1282621
+      },
+      {
+        "channel": "rough",
+        "file": "stone-rough.jpg",
+        "bytes": 476684
+      }
+    ]
+  },
+  {
+    "source": "https://polyhaven.com/a/worn_mossy_plasterwall",
+    "license": "CC0",
+    "asset": "worn_mossy_plasterwall",
+    "maps": [
+      {
+        "channel": "color",
+        "file": "plaster-color.jpg",
+        "bytes": 964249
+      },
+      {
+        "channel": "normal",
+        "file": "plaster-normal.jpg",
+        "bytes": 870753
+      },
+      {
+        "channel": "rough",
+        "file": "plaster-rough.jpg",
+        "bytes": 635042
+      }
+    ]
+  },
+  {
+    "source": "https://polyhaven.com/a/aerial_grass_rock",
+    "license": "CC0",
+    "asset": "aerial_grass_rock",
+    "maps": [
+      {
+        "channel": "color",
+        "file": "ground-color.jpg",
+        "bytes": 666655
+      },
+      {
+        "channel": "normal",
+        "file": "ground-normal.jpg",
+        "bytes": 904956
+      },
+      {
+        "channel": "rough",
+        "file": "ground-rough.jpg",
+        "bytes": 362214
+      }
+    ]
+  },
+  {
+    "source": "https://polyhaven.com/a/brown_mud_leaves_01",
+    "license": "CC0",
+    "asset": "brown_mud_leaves_01",
+    "maps": [
+      {
+        "channel": "color",
+        "file": "soil-color.jpg",
+        "bytes": 1206953
+      },
+      {
+        "channel": "normal",
+        "file": "soil-normal.jpg",
+        "bytes": 1486072
+      },
+      {
+        "channel": "rough",
+        "file": "soil-rough.jpg",
+        "bytes": 644332
+      }
+    ]
+  },
+  {
+    "source": "https://polyhaven.com/a/bark_brown_01",
+    "license": "CC0",
+    "asset": "bark_brown_01",
+    "maps": [
+      {
+        "channel": "color",
+        "file": "bark-color.jpg",
+        "bytes": 729893
+      },
+      {
+        "channel": "normal",
+        "file": "bark-normal.jpg",
+        "bytes": 1226534
+      },
+      {
+        "channel": "rough",
+        "file": "bark-rough.jpg",
+        "bytes": 201307
+      }
+    ]
+  },
+  {
+    "source": "https://polyhaven.com/a/grey_roof_tiles",
+    "license": "CC0",
+    "asset": "grey_roof_tiles",
+    "maps": [
+      {
+        "channel": "color",
+        "file": "roof-color.jpg",
+        "bytes": 596156
+      },
+      {
+        "channel": "normal",
+        "file": "roof-normal.jpg",
+        "bytes": 522186
+      },
+      {
+        "channel": "rough",
+        "file": "roof-rough.jpg",
+        "bytes": 260780
+      }
+    ]
+  },
+  {
+    "source": "https://polyhaven.com/a/wood_planks_grey",
+    "license": "CC0",
+    "asset": "wood_planks_grey",
+    "maps": [
+      {
+        "channel": "color",
+        "file": "wood-color.jpg",
+        "bytes": 228279
+      },
+      {
+        "channel": "normal",
+        "file": "wood-normal.jpg",
+        "bytes": 157419
+      },
+      {
+        "channel": "rough",
+        "file": "wood-rough.jpg",
+        "bytes": 186804
+      }
+    ]
+  }
+]
