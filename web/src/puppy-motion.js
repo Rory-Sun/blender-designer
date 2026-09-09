@@ -44,6 +44,7 @@ export function createPuppyMotion({group,root,legs,spine,head,tail,tailTip}){
   // with the shin, which is a major source of the stiff toy-like appearance.
   const worldRootQ=new THREE.Quaternion();root.getWorldQuaternion(worldRootQ);
   const desiredPawQ=new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),yaw);
+  if(foot.swinging)desiredPawQ.multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1,0,0),.18*Math.sin(foot.progress*TAU)));
   leg.paw.quaternion.copy(worldRootQ.multiply(lowerQ)).invert().multiply(desiredPawQ);
  }
 
@@ -68,18 +69,19 @@ export function createPuppyMotion({group,root,legs,spine,head,tail,tailTip}){
   if(travelled>0)group.position.copy(at(distance));
   group.rotation.y=yaw;
   activity=THREE.MathUtils.lerp(activity,requested?1:0,1-Math.exp(-dt*4));
-  const stride=.27+.15*clamp(speed/.96,0,1);
+  const stride=.23+.09*clamp(speed/.96,0,1);
   cycle+=(travelled+Math.abs((requested||speed>.01)?turn:0)*.115)/stride;
   if(!requested&&speed<.025&&activity>.025)cycle+=dt*.80;
   const phase=cycle*TAU,trot=THREE.MathUtils.smoothstep(speed,.28,.78);
   const duty=THREE.MathUtils.lerp(1,THREE.MathUtils.lerp(.74,.60,trot),activity);
   const offsets=[0,.51,THREE.MathUtils.lerp(.77,.50,trot),THREE.MathUtils.lerp(.27,.01,trot)];
 
-  root.position.y=-.055+Math.sin(time*1.85)*.0015+activity*(.001+.006*Math.cos(phase*2-.5));
-  root.rotation.set(-acceleration*.012+activity*.016*Math.sin(phase*2-.6),activity*.014*Math.sin(phase),clamp(-turnRate*speed*.029,-.052,.052)+activity*.010*Math.sin(phase));
-  spine.rotation.y=activity*.016*Math.sin(phase-.65);
+  root.position.y=-.004+Math.sin(time*1.85)*.001+activity*.006*Math.cos(phase*2-.5);
+  root.rotation.set(-acceleration*.012+activity*.015*Math.sin(phase*2-.6),activity*.014*Math.sin(phase),clamp(-turnRate*speed*.029,-.052,.052)+activity*.010*Math.sin(phase));
+  spine.rotation.y=activity*.030*Math.sin(phase-.65);
+  spine.rotation.x=activity*.010*Math.sin(phase*2-1.0);
   spine.rotation.z=-root.rotation.z*.24;
-  head.rotation.set(-root.rotation.x*.6+.012*Math.sin(time*1.15)+activity*.014*Math.sin(phase*2-1.15),activity*clamp(yawError*.19,-.22,.22)+.018*Math.sin(time*.73),-root.rotation.z*.65);
+  head.rotation.set(-root.rotation.x*.6+.012*Math.sin(time*1.15)+activity*.025*Math.sin(phase*2-1.15),activity*clamp(yawError*.19,-.22,.22)+.018*Math.sin(time*.73),-root.rotation.z*.65);
   tail.rotation.set(.035*Math.sin(time*4.6-.8),.025*Math.sin(time*3.2),(.07+activity*.12)*Math.sin(time*5.4+.35*Math.sin(time*.8)));
   tailTip.rotation.z=(.04+activity*.10)*Math.sin(time*5.4-.85);
   group.updateMatrixWorld(true);inverse.copy(root.matrixWorld).invert();
@@ -94,23 +96,39 @@ export function createPuppyMotion({group,root,legs,spine,head,tail,tailTip}){
    const stepId=Math.floor(cycle+offsets[i]);
    const drift=neutral.distanceTo(foot.planted);
    const scheduled=activity>.025&&foot.phase>=duty&&foot.lastStep!==stepId;
-   const reposition=drift>.115&&(requested||speed>.01);
+   // Recovery steps must not override the diagonal trot on straight sections.
+   const reposition=drift>(turning?.10:.16)&&(requested||speed>.01);
    if(!foot.swinging&&(scheduled||reposition)){
     foot.swinging=true;foot.progress=0;foot.lastStep=stepId;
     foot.lift.copy(foot.target);foot.lift.y=ground;
    }
    if(foot.swinging){
-    const duration=.16+.025*(1-trot);
+    const duration=clamp((1-duty)/cadence,.14,.26);
     foot.progress=Math.min(1,foot.progress+dt/duration);
     const u=foot.progress;
-    const future=neutral.clone().addScaledVector(forward,speed*((1-u)*duration+.075));
+    const future=neutral.clone().addScaledVector(forward,speed*((1-u)*duration+stride*duty/(2*Math.max(speed,.12))));
     foot.landing.copy(future);
     foot.target.lerpVectors(foot.lift,foot.landing,smooth(u));
-    foot.target.y=ground+Math.pow(Math.sin(Math.PI*u),1.5)*(.035+.035*trot);
+    foot.target.y=ground+Math.pow(Math.sin(Math.PI*u),1.5)*(leg.front?.025+.030*trot:.035+.035*trot);
     if(u>=1){foot.planted.copy(foot.landing);foot.planted.y=ground;foot.target.copy(foot.planted);foot.swinging=false;}
    }else foot.target.copy(foot.planted);
-   solveLeg(leg,foot);
+
   });
+  // Fit the supporting shoulders above their planted paws. The body no longer
+  // stays permanently crouched just to make a long stride reachable.
+  group.updateMatrixWorld(true);
+  let correction=0;
+  legs.forEach((leg,i)=>{
+   if(contacts[i].swinging)return;
+   const shoulder=leg.upper.getWorldPosition(new THREE.Vector3()),foot=contacts[i].target;
+   const horizontal=(shoulder.x-foot.x)**2+(shoulder.z-foot.z)**2;
+   const length=leg.length1+leg.length2-.002;
+   const ceiling=foot.y+Math.sqrt(Math.max(.08,length*length-horizontal));
+   correction=Math.min(correction,ceiling-shoulder.y);
+  });
+  root.position.y+=correction;
+  group.updateMatrixWorld(true);inverse.copy(root.matrixWorld).invert();
+  legs.forEach((leg,i)=>solveLeg(leg,contacts[i]));
   group.updateMatrixWorld(true);
   contacts.forEach((foot,i)=>{legs[i].paw.getWorldPosition(foot.sole);foot.error=foot.sole.distanceTo(foot.target);if(!foot.swinging)maxContactError=Math.max(maxContactError,foot.error);});
  }
