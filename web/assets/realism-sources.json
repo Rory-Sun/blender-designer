@@ -1,0 +1,46 @@
+[
+  {
+    "source": "https://polyhaven.com/a/plaster_stone_wall_01",
+    "license": "CC0",
+    "asset": "plaster_stone_wall_01",
+    "maps": [
+      {
+        "channel": "color",
+        "file": "wall-detail-color.jpg",
+        "bytes": 704992
+      },
+      {
+        "channel": "normal",
+        "file": "wall-detail-normal.jpg",
+        "bytes": 985509
+      },
+      {
+        "channel": "rough",
+        "file": "wall-detail-rough.jpg",
+        "bytes": 153750
+      }
+    ]
+  },
+  {
+    "source": "https://polyhaven.com/a/grey_roof_tiles_02",
+    "license": "CC0",
+    "asset": "grey_roof_tiles_02",
+    "maps": [
+      {
+        "channel": "color",
+        "file": "slate-detail-color.jpg",
+        "bytes": 402212
+      },
+      {
+        "channel": "normal",
+        "file": "slate-detail-normal.jpg",
+        "bytes": 570336
+      },
+      {
+        "channel": "rough",
+        "file": "slate-detail-rough.jpg",
+        "bytes": 346538
+      }
+    ]
+  }
+]

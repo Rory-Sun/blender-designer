@@ -6,10 +6,9 @@ import {random} from './vegetation.js';
 export function createVillage(scene, materials) {
  const rand=random(619), batches=new Map(), tiles=[], dummy=new THREE.Object3D();
  const timber=materials.wood.clone();timber.color.set(0x80705c);
- const lime=materials.plaster.clone();lime.color.set(0xe8e1ca);lime.normalScale.set(.22,.22);
- const clay=materials.earthwall.clone();clay.color.set(0xcbb688);clay.normalScale.set(.25,.25);
- for(const mat of [lime,clay]){mat.onBeforeCompile=shader=>{shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>','#include <map_fragment>\n diffuseColor.rgb=mix(diffuseColor.rgb,diffuse,0.63);');};mat.customProgramCacheKey=()=> 'weathered-limewash';}
- const slate=new THREE.MeshStandardMaterial({color:0x3e4849,roughness:.92});
+ const lime=materials.plaster.clone();lime.color.set(0xe8e1ca);lime.normalScale.set(.65,.65);
+ const clay=materials.earthwall.clone();clay.color.set(0xcbb688);clay.normalScale.set(.6,.6);
+ const slate=materials.roof.clone();slate.color.set(0xa8ada8);slate.normalScale.set(.55,.55);
  const brick=materials.stone.clone();brick.color.set(0x88887a);
  const glass=new THREE.MeshStandardMaterial({color:0x0a1210,roughness:.37,metalness:.05,envMapIntensity:.12});
  const dark=new THREE.MeshStandardMaterial({color:0x101713,roughness:1});
@@ -83,7 +82,7 @@ export function createVillage(scene, materials) {
  }
  const tileGeometry=new THREE.CylinderGeometry(.133,.122,.35,6,1,true,Math.PI/2,Math.PI);tileGeometry.scale(1,1,.43);
  const tileMesh=new THREE.InstancedMesh(tileGeometry,slate,tiles.length),color=new THREE.Color();
- tiles.forEach((t,i)=>{dummy.position.set(t.x,t.y,t.z);dummy.rotation.set(t.rx,0,0);dummy.scale.set(1,1,1);dummy.updateMatrix();tileMesh.setMatrixAt(i,dummy.matrix);tileMesh.setColorAt(i,color.setRGB(t.shade,t.shade*1.01,t.shade*.98));});
+ tiles.forEach((t,i)=>{dummy.position.set(t.x,t.y,t.z);dummy.rotation.set(t.rx+(rand()-.5)*.035,(rand()-.5)*.025,(rand()-.5)*.025);dummy.scale.set(.97+rand()*.06,.97+rand()*.06,1);dummy.updateMatrix();tileMesh.setMatrixAt(i,dummy.matrix);tileMesh.setColorAt(i,color.setRGB(t.shade,t.shade*1.01,t.shade*.98));});
  tileMesh.castShadow=true;tileMesh.receiveShadow=true;tileMesh.userData.region='village';tileMesh.name='Overlapping curved clay roof tiles';tileMesh.computeBoundingSphere();group.add(tileMesh);
  scene.add(group);return {group,counts:{houses:houses.length,roofTiles:tiles.length}};
 }
