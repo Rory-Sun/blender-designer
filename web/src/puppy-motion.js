@@ -8,7 +8,7 @@ const smooth=t=>t*t*t*(t*(t*6-15)+10);
 const down=new THREE.Vector3(0,-1,0);
 
 /** Distance-driven steps with fixed world-space contacts and two-bone IK. */
-export function createPuppyMotion({group,root,legs,spine,head,tail,tailTip}){
+export function createPuppyMotion({group,root,legs,spine,head,tail,tailTip,chest,ears=[]}){
  const ground=.29;
  const routePoint=(z,offset)=>new THREE.Vector3(pathX(-z)+offset,ground,z);
  const route=new THREE.CatmullRomCurve3([
@@ -22,8 +22,8 @@ export function createPuppyMotion({group,root,legs,spine,head,tail,tailTip}){
   swinging:false,progress:0,lastStep:-10,phase:0,initialized:false,sole:new THREE.Vector3(),error:0
  }));
  const inverse=new THREE.Matrix4(),direction=new THREE.Vector3(),pole=new THREE.Vector3(),knee=new THREE.Vector3(),target=new THREE.Vector3(),upperQ=new THREE.Quaternion(),lowerQ=new THREE.Quaternion();
- let requested=false,lastTime=null,distance=0,speed=0,cycle=0,activity=0,yaw=group.rotation.y,turnRate=0,acceleration=0;
- let maxContactError=0,turning=false;
+ let requested=false,lastTime=null,distance=0,speed=0,cycle=0,activity=0,yaw=group.rotation.y,turnRate=0,acceleration=0,bodyPitch=0,pitchVelocity=0,earSwing=0,earVelocity=0;
+ let maxContactError=0,turning=false,pauseLeft=0,nextPauseDistance=5.2,investigate=0,pauseCount=0;
  const at=distance=>route.getPointAt(THREE.MathUtils.euclideanModulo(distance,routeLength)/routeLength);
  const tangent=distance=>route.getTangentAt(THREE.MathUtils.euclideanModulo(distance,routeLength)/routeLength);
 
@@ -56,10 +56,20 @@ export function createPuppyMotion({group,root,legs,spine,head,tail,tailTip}){
   turning=Math.abs(curvature)>.8||Math.abs(yawError)>.4;
   const alignment=THREE.MathUtils.smoothstep(Math.PI-Math.abs(yawError),Math.PI-.95,Math.PI-.2);
   const cruise=Math.min(.96,Math.sqrt(.30/(Math.abs(curvature)+.12)));
-  const goal=requested?cruise*(.10+.90*alignment):0;
+  if(requested&&pauseLeft<=0&&distance>=nextPauseDistance&&!turning&&speed>.45){pauseLeft=2.6;pauseCount++;}
+  if(pauseLeft>0&&speed<.035){pauseLeft=Math.max(0,pauseLeft-dt);if(pauseLeft===0)nextPauseDistance=distance+5.5+(pauseCount%3)*1.1;}
+  const locomoting=requested&&pauseLeft<=0;
+  investigate=THREE.MathUtils.lerp(investigate,requested&&pauseLeft>0&&speed<.08?1:0,1-Math.exp(-dt*3));
+  const goal=locomoting?cruise*(.10+.90*alignment):0;
   const previousSpeed=speed;
-  speed+=clamp(goal-speed,-1.30*dt,.78*dt);
-  acceleration=(speed-previousSpeed)/Math.max(dt,.0001);
+  const desiredAcceleration=clamp((goal-speed)*4,-1.30,.78);
+  acceleration=THREE.MathUtils.lerp(acceleration,desiredAcceleration,1-Math.exp(-dt*9));
+  speed=Math.max(0,speed+acceleration*dt);
+  if(goal===0&&speed<.0015){speed=0;acceleration=0;}
+  const pitchTarget=-acceleration*.028+investigate*.015;
+  pitchVelocity+=(85*(pitchTarget-bodyPitch)-17*pitchVelocity)*dt;bodyPitch+=pitchVelocity*dt;
+  const earTarget=clamp(-acceleration*.055+activity*.055*Math.sin(cycle*TAU*2-1),-.11,.11);
+  earVelocity+=(110*(earTarget-earSwing)-12*earVelocity)*dt;earSwing+=earVelocity*dt;
   const travelled=(previousSpeed+speed)*.5*dt;
   distance+=travelled;
   const turn=clamp(yawError,-2.05*dt,2.05*dt);
@@ -68,20 +78,28 @@ export function createPuppyMotion({group,root,legs,spine,head,tail,tailTip}){
   turnRate=THREE.MathUtils.lerp(turnRate,dt?turn/dt:0,1-Math.exp(-dt*8));
   if(travelled>0)group.position.copy(at(distance));
   group.rotation.y=yaw;
-  activity=THREE.MathUtils.lerp(activity,requested?1:0,1-Math.exp(-dt*4));
+  activity=THREE.MathUtils.lerp(activity,locomoting?1:0,1-Math.exp(-dt*4));
   const stride=.23+.09*clamp(speed/.96,0,1);
   cycle+=(travelled+Math.abs((requested||speed>.01)?turn:0)*.115)/stride;
-  if(!requested&&speed<.025&&activity>.025)cycle+=dt*.80;
+  if(!locomoting&&speed<.025&&activity>.025)cycle+=dt*.80;
   const phase=cycle*TAU,trot=THREE.MathUtils.smoothstep(speed,.28,.78);
   const duty=THREE.MathUtils.lerp(1,THREE.MathUtils.lerp(.74,.60,trot),activity);
   const offsets=[0,.51,THREE.MathUtils.lerp(.77,.50,trot),THREE.MathUtils.lerp(.27,.01,trot)];
 
   root.position.y=-.004+Math.sin(time*1.85)*.001+activity*.006*Math.cos(phase*2-.5);
-  root.rotation.set(-acceleration*.012+activity*.015*Math.sin(phase*2-.6),activity*.014*Math.sin(phase),clamp(-turnRate*speed*.029,-.052,.052)+activity*.010*Math.sin(phase));
+  root.rotation.set(bodyPitch+activity*.015*Math.sin(phase*2-.6),activity*.014*Math.sin(phase),clamp(-turnRate*speed*.029,-.052,.052)+activity*.010*Math.sin(phase));
   spine.rotation.y=activity*.030*Math.sin(phase-.65);
   spine.rotation.x=activity*.010*Math.sin(phase*2-1.0);
   spine.rotation.z=-root.rotation.z*.24;
+  const breath=Math.sin(time*(2.4+activity*.8));
+  if(chest){chest.scale.set(1+.007*breath,1+.005*breath,1);chest.rotation.y=activity*.012*Math.sin(phase-.3);}
+  legs.forEach((leg,i)=>{if(!leg.anchor)return;leg.upper.position.copy(leg.anchor);const swing=Math.sin(phase+(i%2?Math.PI:0));leg.upper.position.z+=activity*(leg.front?.010:.006)*swing;leg.upper.position.y+=activity*.003*Math.cos(phase+(i%2?Math.PI:0));});
+  ears.forEach((ear,i)=>{ear.rotation.x=earSwing;ear.rotation.z=(i?1:-1)*(.012*Math.sin(time*2.4)+Math.abs(earSwing)*.25);});
   head.rotation.set(-root.rotation.x*.6+.012*Math.sin(time*1.15)+activity*.025*Math.sin(phase*2-1.15),activity*clamp(yawError*.19,-.22,.22)+.018*Math.sin(time*.73),-root.rotation.z*.65);
+  head.rotation.x+=investigate*(.32+.012*Math.sin(time*11));
+  head.position.y=.59-investigate*.018;
+  head.rotation.y+=investigate*.18*Math.sin(time*1.4);
+  head.rotation.z+=investigate*.025*Math.sin(time*1.9);
   tail.rotation.set(.035*Math.sin(time*4.6-.8),.025*Math.sin(time*3.2),(.07+activity*.12)*Math.sin(time*5.4+.35*Math.sin(time*.8)));
   tailTip.rotation.z=(.04+activity*.10)*Math.sin(time*5.4-.85);
   group.updateMatrixWorld(true);inverse.copy(root.matrixWorld).invert();
@@ -142,6 +160,6 @@ export function createPuppyMotion({group,root,legs,spine,head,tail,tailTip}){
   while(remaining>1e-7){const dt=Math.min(remaining,1/90);step(dt,end-remaining+dt);remaining-=dt;}
   lastTime=time;
  }
- function setRunning(value,time){update(time);requested=!!value;return requested;}
- return {update,setRunning,get running(){return requested;},get moving(){return speed>.002||activity>.025;},get diagnostics(){return {speed,distance,activity,turning,heading:yaw,maxContactError,feet:contacts.map(f=>({swinging:f.swinging,target:f.target.toArray(),sole:f.sole.toArray(),contactError:f.error}))};}};
+ function setRunning(value,time){update(time);requested=!!value;pauseLeft=0;nextPauseDistance=distance+5.2;return requested;}
+ return {update,setRunning,get running(){return requested;},get moving(){return speed>.002||activity>.025||investigate>.01;},get diagnostics(){return {speed,distance,activity,turning,behavior:investigate>.25?'sniffing':speed>.04?'trotting':'resting',pauseCount,bodyPitch,earSwing,heading:yaw,maxContactError,feet:contacts.map(f=>({swinging:f.swinging,target:f.target.toArray(),sole:f.sole.toArray(),contactError:f.error}))};}};
 }

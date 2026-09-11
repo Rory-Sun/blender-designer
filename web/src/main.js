@@ -7,10 +7,13 @@ import {createCreek} from './water.js';
 import {NatureAudio} from './audio.js';
 import {createVillage} from './village.js';
 import {createPuppy} from './puppy.js';
+import {createHabitat} from './habitat.js';
+import {createNatureAssets} from './nature-assets.js';
 
 const $=id=>document.getElementById(id),canvas=$('world'),stage=$('stage'),params=new URLSearchParams(location.search),mobile=innerWidth<720;
 const reduced=matchMedia('(prefers-reduced-motion: reduce)');
 const state={ready:false,selected:'overview',light:'sunset',motion:!reduced.matches,audio:false,frames:0,fps:0,error:null,quality:mobile?'balanced':'high',is3D:true};
+let natureAssets;
 let renderer,controls,camera,scene,creek,puppy,puppyRig,village,nature,sun,hemi,sky,environmentTarget,pmrem,transition=null,lightTransition=null,last=0,elapsed=0,lastRender=0,raf=0,disposed=false;
 const time={value:0},wind={value:.7},clock={frames:0,time:0},pickables=[],raycaster=new THREE.Raycaster(),pointer=new THREE.Vector2(),v3=new THREE.Vector3(),audio=new NatureAudio();
 const presets={
@@ -20,9 +23,9 @@ const presets={
  puppy:{position:[-2.9,1.65,8.6],target:[-2.18,.69,5.2]},
  village:{position:[2.5,2.9,-15.8],target:[6.8,2.25,-24.3]}
 };
-const details={overview:['溪畔秋日','拖动环绕 · 滚轮拉近 · 点击探索'],bridge:['溪上的石桥','石板上的苔痕，记录着日复一日的水声。'],rice:['风经过稻田','稻穗微微俯身，阳光落在叶尖。'],puppy:['溪边的小伙伴','让它沿小路跑一圈，跟随它看看沿途的风景。'],village:['山脚的农舍','灰瓦、土墙与树影，是山村熟悉的颜色。']};
+const details={overview:['溪畔秋日','拖动环绕 · 滚轮拉近 · 点击探索'],bridge:['溪上的石桥','石板上的苔痕，记录着日复一日的水声。'],rice:['风经过稻田','稻穗微微俯身，阳光落在叶尖。'],puppy:['溪边的小伙伴','沿着小路小跑，偶尔停下来观察、闻闻草木。'],village:['山脚的农舍','灰瓦、土墙与树影，是山村熟悉的颜色。']};
 const hotspotDefs=[{id:'bridge',label:'石桥',pos:new THREE.Vector3(2.6,1.25,-5)},{id:'puppy',label:'小狗',pos:new THREE.Vector3(-2.18,1.22,5.2)},{id:'village',label:'农舍',pos:new THREE.Vector3(5.3,3.55,-22.2)}];
-const modes={sunset:{label:'暖夕',sun:0xffd69a,sky:0xb5c9ca,energy:3.4,hemi:.65,elevation:32,azimuth:315,exposure:.76,fog:.010},day:{label:'晴日',sun:0xfff3d6,sky:0xb4d1da,energy:3.2,hemi:.7,elevation:50,azimuth:330,exposure:.8,fog:.008},mist:{label:'晨雾',sun:0xf6e4bd,sky:0xc1ceca,energy:2.0,hemi:.7,elevation:18,azimuth:300,exposure:.85,fog:.020}};
+const modes={sunset:{label:'暖夕',sun:0xffd69a,sky:0xb5c9ca,energy:3.1,hemi:.88,elevation:32,azimuth:315,exposure:.78,fog:.012},day:{label:'晴日',sun:0xfff3d6,sky:0xb4d1da,energy:3.1,hemi:.88,elevation:50,azimuth:330,exposure:.8,fog:.009},mist:{label:'晨雾',sun:0xf6e4bd,sky:0xc1ceca,energy:2.0,hemi:.85,elevation:18,azimuth:300,exposure:.85,fog:.020}};
 const currentLight={...modes.sunset,sun:new THREE.Color(modes.sunset.sun),sky:new THREE.Color(modes.sunset.sky)};
 function progress(value,label){const n=Math.max(Number($('progress').dataset.value||0),value);$('progress').dataset.value=n;$('progress').style.width=n+'%';$('loading-label').textContent=label;}
 function textureSet(loader,prefix){return Promise.all(['color','normal','rough'].map(channel=>loader.loadAsync(`./assets/${prefix}-${channel}.jpg`)));}
@@ -83,18 +86,20 @@ async function init(){
  try{
   progress(4,'沿着溪流，走进山野');
   renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:false,powerPreference:'high-performance'});renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.shadowMap.autoUpdate=false;
-  scene=new THREE.Scene();scene.environmentIntensity=.18;scene.fog=new THREE.FogExp2(0xb5c9ca,.01);
+  scene=new THREE.Scene();scene.environmentIntensity=.25;scene.fog=new THREE.FogExp2(0xb5c9ca,.01);
   camera=new THREE.PerspectiveCamera(48,innerWidth/innerHeight,.12,420);camera.position.fromArray(presets.overview.position);
   controls=new OrbitControls(camera,canvas);controls.target.fromArray(presets.overview.target);controls.enableDamping=!reduced.matches;controls.dampingFactor=.08;controls.rotateSpeed=.6;controls.zoomSpeed=.8;controls.enablePan=true;controls.minDistance=2;controls.maxDistance=66;controls.minPolarAngle=.12;controls.maxPolarAngle=1.52;controls.maxTargetRadius=44;controls.cursor.set(0,1,-9);controls.update();resize();
   hemi=new THREE.HemisphereLight(0xcbe0e4,0x5b6036,1.3);scene.add(hemi);
-  sun=new THREE.DirectionalLight(0xffd69a,3.4);sun.target.position.set(0,0,-8);scene.add(sun,sun.target);sun.castShadow=true;sun.shadow.mapSize.set(mobile?1024:2048,mobile?1024:2048);Object.assign(sun.shadow.camera,{left:-32,right:32,top:34,bottom:-34,near:1,far:150});sun.shadow.bias=-.00025;sun.shadow.normalBias=.05;sun.shadow.radius=2;
+  sun=new THREE.DirectionalLight(0xffd69a,3.4);sun.target.position.set(0,0,-8);scene.add(sun,sun.target);sun.castShadow=true;sun.shadow.mapSize.set(mobile?1024:2048,mobile?1024:2048);Object.assign(sun.shadow.camera,{left:-32,right:32,top:34,bottom:-34,near:1,far:150});sun.shadow.bias=-.00025;sun.shadow.normalBias=.015;sun.shadow.radius=2;
   sky=new Sky();sky.scale.setScalar(350);sky.material.uniforms.mieCoefficient.value=.004;sky.material.uniforms.mieDirectionalG.value=.78;scene.add(sky);pmrem=new THREE.PMREMGenerator(renderer);
   const loader=new THREE.TextureLoader(),gltfLoader=new GLTFLoader();let completed=0;const loaded=p=>p.then(v=>{completed++;progress(10+completed*5,'阳光正落在草木之间');return v;});
   const [stone,plaster,ground,soil,bark,roof,wood,leaf,normal,land,dog]=await Promise.all([textureSet(loader,'stone'),textureSet(loader,'wall-detail'),textureSet(loader,'ground'),textureSet(loader,'soil'),textureSet(loader,'bark'),textureSet(loader,'slate-detail'),textureSet(loader,'wood'),loader.loadAsync('./assets/leaves.png'),loader.loadAsync('./assets/water-normal.jpg'),gltfLoader.loadAsync('./assets/countryside.glb'),gltfLoader.loadAsync('./assets/puppy-fluffy.glb')].map(loaded));
-  const materials={stone:materialFrom(stone,{color:0xc6c3aa}),plaster:materialFrom(plaster,{color:0xe9e1c7}),ground:materialFrom(ground,{color:0xaeb581}),soil:materialFrom(soil,{color:0xe0cba4}),bark:materialFrom(bark,{color:0xb7b399}),roof:materialFrom(roof,{color:0x9eaa9c}),wood:materialFrom(wood,{color:0x9a8870}),dark:new THREE.MeshStandardMaterial({color:0x182219,roughness:.95})};materials.earthwall=materials.plaster.clone();materials.earthwall.color.set(0xd5bc85);materials.rock=materials.stone.clone();materials.rock.color.set(0x969d88);
-  scene.add(land.scene);land.scene.traverse(o=>{if(!o.isMesh)return;if(o.userData.region==='village'||o.name.startsWith('village_')){o.visible=false;return;}const key=o.userData.surface||o.name.split('_').at(-1);o.material=materials[key]||materials.stone;o.castShadow=key!=='ground'&&key!=='soil';o.receiveShadow=true;o.userData.region=o.userData.region||o.name.split('_')[0];if(['bridge','village'].includes(o.userData.region))pickables.push(o);});
+  const materials={stone:materialFrom(stone,{color:0xc6c3aa}),plaster:materialFrom(plaster,{color:0xe9e1c7}),ground:materialFrom(ground,{color:0xc3c9a4}),soil:materialFrom(soil,{color:0xe0cba4}),bark:materialFrom(bark,{color:0xb7b399}),roof:materialFrom(roof,{color:0x9eaa9c}),wood:materialFrom(wood,{color:0x9a8870}),dark:new THREE.MeshStandardMaterial({color:0x182219,roughness:.95})};materials.earthwall=materials.plaster.clone();materials.earthwall.color.set(0xd5bc85);materials.rock=materials.stone.clone();materials.rock.color.set(0x969d88);
+  scene.add(land.scene);land.scene.traverse(o=>{if(!o.isMesh)return;if(o.userData.region==='village'||o.name.startsWith('village_')){o.visible=false;return;}const key=o.userData.surface||o.name.split('_').at(-1);if(key==='soil'){o.visible=false;return;}o.material=materials[key]||materials.stone;o.castShadow=key!=='ground'&&key!=='soil';o.receiveShadow=true;o.userData.region=o.userData.region||o.name.split('_')[0];if(['bridge','village'].includes(o.userData.region))pickables.push(o);});
   addMountains(materials.ground);
+  createHabitat(scene,materials,mobile);
   progress(73,'草木随风，溪水有声');
+  natureAssets=await createNatureAssets({scene,land:land.scene,time,wind,mobile});
   nature=await createVegetation({scene,materials,leafTexture:leaf,time,wind,mobile});
   village=createVillage(scene,materials);pickables.push(village.group);
   puppyRig=createPuppy(dog.scene);puppy=puppyRig.group;scene.add(puppy);pickables.push(puppy);
@@ -109,5 +114,5 @@ async function init(){
 window.addEventListener('resize',resize);document.addEventListener('visibilitychange',()=>{last=0;if(document.hidden)audio.suspend();else audio.resume();});reduced.addEventListener('change',e=>{if(e.matches)setMotion(false);if(controls)controls.enableDamping=!e.matches;});
 canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();state.ready=false;toast('画面正在恢复，请稍候');});canvas.addEventListener('webglcontextrestored',()=>location.reload());
 window.addEventListener('pagehide',()=>{disposed=true;cancelAnimationFrame(raf);audio.suspend();});
-window.exhibit=Object.freeze({getState:()=>({...state,camera:camera?.position.toArray(),target:controls?.target.toArray(),ripples:creek?.total||0,nature:nature?.counts,village:village?.counts,puppy:puppyRig?{running:puppyRig.running,position:puppy.position.toArray(),joints:puppyRig.joints,motion:puppyRig.diagnostics}:null,renderInfo:renderer?{calls:renderer.info.render.calls,triangles:renderer.info.render.triangles}:null}),focus,setLight,setMotion,runPuppy,project:id=>{const h=hotspotDefs.find(h=>h.id===id);if(!h||!camera)return null;const p=h.pos.clone().project(camera);return{x:(p.x*.5+.5)*innerWidth,y:(-p.y*.5+.5)*innerHeight};}});
+window.exhibit=Object.freeze({getState:()=>({...state,camera:camera?.position.toArray(),target:controls?.target.toArray(),ripples:creek?.total||0,nature:nature?.counts,natureAssets:natureAssets?.counts,village:village?.counts,puppy:puppyRig?{running:puppyRig.running,position:puppy.position.toArray(),joints:puppyRig.joints,motion:puppyRig.diagnostics}:null,renderInfo:renderer?{calls:renderer.info.render.calls,triangles:renderer.info.render.triangles}:null}),focus,setLight,setMotion,runPuppy,project:id=>{const h=hotspotDefs.find(h=>h.id===id);if(!h||!camera)return null;const p=h.pos.clone().project(camera);return{x:(p.x*.5+.5)*innerWidth,y:(-p.y*.5+.5)*innerHeight};}});
 init();

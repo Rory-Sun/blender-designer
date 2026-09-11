@@ -1,20 +1,32 @@
 import * as THREE from 'three';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 import {random} from './vegetation.js';
+import {houses,houseAngles} from './village-layout.js';
 
 // Geometry, rather than a painted facade, gives the eaves and openings depth.
 export function createVillage(scene, materials) {
  const rand=random(619), batches=new Map(), tiles=[], dummy=new THREE.Object3D();
+ let weather=null;
  const timber=materials.wood.clone();timber.color.set(0x80705c);
- const lime=materials.plaster.clone();lime.color.set(0xe8e1ca);lime.normalScale.set(.65,.65);
- const clay=materials.earthwall.clone();clay.color.set(0xcbb688);clay.normalScale.set(.6,.6);
+ const lime=materials.plaster.clone();lime.color.set(0xe8e1ca);lime.normalScale.set(.65,.65);lime.vertexColors=true;
+ const clay=materials.earthwall.clone();clay.color.set(0xcbb688);clay.normalScale.set(.6,.6);clay.vertexColors=true;
  const slate=materials.roof.clone();slate.color.set(0xa8ada8);slate.normalScale.set(.55,.55);
  const brick=materials.stone.clone();brick.color.set(0x88887a);
  const glass=new THREE.MeshStandardMaterial({color:0x0a1210,roughness:.37,metalness:.05,envMapIntensity:.12});
  const dark=new THREE.MeshStandardMaterial({color:0x101713,roughness:1});
+ const pottery=new THREE.MeshStandardMaterial({color:0x75604b,roughness:.95,side:THREE.DoubleSide});
  const metal=new THREE.MeshStandardMaterial({color:0x373b32,roughness:.7,metalness:.6});
- function add(g,m,x=0,y=0,z=0,rx=0,ry=0,rz=0){dummy.position.set(x,y,z);dummy.rotation.set(rx,ry,rz);dummy.scale.set(1,1,1);dummy.updateMatrix();g.applyMatrix4(dummy.matrix);const a=batches.get(m)||[];a.push(g);batches.set(m,a);}
- function box(x,y,z,w,h,d,m,rx=0,ry=0,rz=0){add(new THREE.BoxGeometry(w,h,d),m,x,y,z,rx,ry,rz);}
+ function add(g,m,x=0,y=0,z=0,rx=0,ry=0,rz=0){dummy.position.set(x,y,z);dummy.rotation.set(rx,ry,rz);dummy.scale.set(1,1,1);dummy.updateMatrix();g.applyMatrix4(dummy.matrix);
+  if(weather&&(m===lime||m===clay)){
+   const p=g.attributes.position,colors=[];
+   for(let i=0;i<p.count;i++){const px=p.getX(i),py=p.getY(i),pz=p.getZ(i),grain=.5+.5*Math.sin(px*15.7+pz*9.1+Math.sin(py*11.));
+    const damp=(1-THREE.MathUtils.smoothstep(py,weather.base,weather.base+.58+grain*.18))*.20;
+    const eaves=THREE.MathUtils.smoothstep(py,weather.top-.42,weather.top)*(.055+grain*.075);
+    let runoff=0;for(const o of weather.windows){const below=o.y-o.h/2-py;if(below>0&&below<.65)runoff+=Math.exp(-Math.pow((px-o.x)/(o.w*.42),4))*Math.exp(-below*5)*(.06+grain*.07);}
+    const shade=1-damp-eaves-runoff;colors.push(shade,shade*(1-damp*.07),shade*(1-damp*.17));
+   }g.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));
+  }const a=batches.get(m)||[];a.push(g);batches.set(m,a);}
+ function box(x,y,z,w,h,d,m,rx=0,ry=0,rz=0){add(new THREE.BoxGeometry(w,h,d,...((m===lime||m===clay)?[Math.max(1,Math.ceil(w*5)),Math.max(1,Math.ceil(h*5)),1]:[1,1,1])),m,x,y,z,rx,ry,rz);}
  function beam(a,b,r,m=timber){const p=new THREE.Vector3(...a),q=new THREE.Vector3(...b),g=new THREE.CylinderGeometry(r,r*1.07,p.distanceTo(q),6);g.applyQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0,1,0),q.sub(p).normalize()));add(g,m,...p.add(new THREE.Vector3(...b)).multiplyScalar(.5).toArray());}
  function frame(cx,cy,z,w,h,door=false){
   box(cx,cy,z-.13,w,h,.10,door?dark:glass);
@@ -33,15 +45,18 @@ export function createVillage(scene, materials) {
    }
   }
  }
- const houses=[[5.4,-24,4.5,3.5,2.9,0],[10.5,-26,4.6,4,3.85,1],[15.5,-25.6,4.5,3.7,2.8,1],[1.2,-28,3.5,3.2,2.75,2],[-3.6,-29,4.1,3,2.4,1],[-8,-30,3.6,3.1,2.5,0],[-12.5,-31,3.7,3,2.35,1]];
+
  houses.forEach(([x,z,w,d,h,type],houseIndex)=>{
+  const batchStarts=new Map([...batches].map(([m,gs])=>[m,gs.length])),tileStart=tiles.length;
   const base=.52,top=base+h,front=z+d/2,back=z-d/2,wall=type===0?clay:type===2?timber:lime,rise=d*.29;
+  weather={base,top,windows:[]};
   // Separate stone footing courses and irregular joints remain visible close up.
   box(x,.32,z,w+.12,.42,d+.12,brick);
   for(let row=0;row<2;row++)for(let col=0;col<Math.ceil(w/.46);col++){const bx=x-w/2+(col+.5)*.46-(row%2)*.20;box(bx,.19+row*.17,front+.075,.43,.15,.14,brick);}
   box(x,base+h/2,back,w,h,.22,wall);box(x-w/2+.10,base+h/2,z,.20,h,d,wall);box(x+w/2-.1,base+h/2,z,.20,h,d,wall);
   const openings=[{x:x-.12,y:base+.91,w:.87,h:1.82,door:true},{x:x-w*.32,y:base+1.55,w:.68,h:.82},{x:x+w*.31,y:base+1.55,w:.73,h:.82}];
   if(h>3.3)for(const dx of [-w*.28,w*.28])openings.push({x:x+dx,y:base+2.95,w:.75,h:.75});
+  weather.windows=openings.filter(o=>!o.door);
   const xs=[x-w/2,x+w/2,...openings.flatMap(o=>[o.x-o.w/2,o.x+o.w/2])].sort((a,b)=>a-b),ys=[base,top,...openings.flatMap(o=>[o.y-o.h/2,o.y+o.h/2])].sort((a,b)=>a-b);
   for(let i=0;i<xs.length-1;i++)for(let j=0;j<ys.length-1;j++){
    const cx=(xs[i]+xs[i+1])/2,cy=(ys[j]+ys[j+1])/2;
@@ -69,9 +84,28 @@ export function createVillage(scene, materials) {
    box(x,.32,front+.62,w*.62,.22,1.32,brick);
   }
   if(houseIndex===1||houseIndex===4){box(x+w*.23,top+rise+.30,z-.45,.36,.9,.42,brick);box(x+w*.23,top+rise+.78,z-.45,.45,.09,.50,slate);}
-  // Uneven small patches around the foundation, instead of giant wall stains.
-  for(let i=0;i<12;i++){const px=x-w*.46+rand()*w*.92;box(px,base+.07+rand()*.17,front+.047,.09+rand()*.24,.08+rand()*.14,.008,clay);}
+  // Small useful objects at selected doorways: a bench, stacked firewood and
+  // open earthenware pots. Keep the route to each door clear.
+  if(houseIndex===0||houseIndex===2){
+   const bx=x+w*.34,bz=front+.57;box(bx,.77,bz,.83,.075,.30,timber);
+   for(const dx of [-.29,.29])box(bx+dx,.52,bz,.075,.46,.23,timber);
+  }
+  if(houseIndex===1||houseIndex===4){for(let row=0;row<3;row++)for(let col=0;col<4-row;col++){
+   const lx=x-w*.38+col*.14+row*.07,ly=.40+row*.125;
+   beam([lx,ly,front+.23],[lx+.02,ly+.012,front+.70+rand()*.12],.065,timber);
+  }}
+  if(houseIndex<3){const px=x-w*.39,pz=front+.48;
+   const pot=new THREE.LatheGeometry([new THREE.Vector2(.08,0),new THREE.Vector2(.14,.045),new THREE.Vector2(.16,.21),new THREE.Vector2(.12,.29),new THREE.Vector2(.13,.31),new THREE.Vector2(.105,.31),new THREE.Vector2(.095,.27)],12);
+   add(pot,pottery,px,.34,pz);add(new THREE.CircleGeometry(.096,16),dark,px,.58,pz,-Math.PI/2);
+  }
   for(const dx of [-w*.44,w*.44])box(x+dx,top-.17,front+.045,.085,.28,.08,timber);
+  // Transform complete houses together so openings, eaves and roof tiles stay
+  // attached while breaking up the repeated street alignment.
+  const yaw=houseAngles[houseIndex];
+  const transform=new THREE.Matrix4().makeTranslation(x,0,z).multiply(new THREE.Matrix4().makeRotationY(yaw)).multiply(new THREE.Matrix4().makeTranslation(-x,0,-z));
+  for(const [m,gs] of batches)for(let i=batchStarts.get(m)||0;i<gs.length;i++)gs[i].applyMatrix4(transform);
+  for(let i=tileStart;i<tiles.length;i++){const t=tiles[i],v=new THREE.Vector3(t.x,t.y,t.z).applyMatrix4(transform);t.x=v.x;t.y=v.y;t.z=v.z;t.yaw=yaw;}
+  weather=null;
  });
  const group=new THREE.Group();group.name='Detailed vernacular village';group.userData.region='village';
  for(const [mat,gs] of batches){const g=mergeGeometries(gs,false);for(const part of gs)part.dispose();if(!g)continue;
@@ -82,7 +116,7 @@ export function createVillage(scene, materials) {
  }
  const tileGeometry=new THREE.CylinderGeometry(.133,.122,.35,6,1,true,Math.PI/2,Math.PI);tileGeometry.scale(1,1,.43);
  const tileMesh=new THREE.InstancedMesh(tileGeometry,slate,tiles.length),color=new THREE.Color();
- tiles.forEach((t,i)=>{dummy.position.set(t.x,t.y,t.z);dummy.rotation.set(t.rx+(rand()-.5)*.035,(rand()-.5)*.025,(rand()-.5)*.025);dummy.scale.set(.97+rand()*.06,.97+rand()*.06,1);dummy.updateMatrix();tileMesh.setMatrixAt(i,dummy.matrix);tileMesh.setColorAt(i,color.setRGB(t.shade,t.shade*1.01,t.shade*.98));});
+ tiles.forEach((t,i)=>{dummy.position.set(t.x,t.y,t.z);dummy.rotation.set(t.rx+(rand()-.5)*.035,(rand()-.5)*.025,(rand()-.5)*.025);dummy.quaternion.premultiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),t.yaw||0));dummy.scale.set(.97+rand()*.06,.97+rand()*.06,1);dummy.updateMatrix();tileMesh.setMatrixAt(i,dummy.matrix);tileMesh.setColorAt(i,color.setRGB(t.shade,t.shade*1.01,t.shade*.98));});
  tileMesh.castShadow=true;tileMesh.receiveShadow=true;tileMesh.userData.region='village';tileMesh.name='Overlapping curved clay roof tiles';tileMesh.computeBoundingSphere();group.add(tileMesh);
  scene.add(group);return {group,counts:{houses:houses.length,roofTiles:tiles.length}};
 }
