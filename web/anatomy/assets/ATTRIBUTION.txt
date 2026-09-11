@@ -1,0 +1,38 @@
+Human Atlas - anatomical assets
+
+SOURCE
+Z-Anatomy - The libre 3D atlas of anatomy - CC-BY-SA 4.0
+https://github.com/Z-Anatomy/Models-of-human-anatomy
+Source file: master/Z-Anatomy.zip, Z-Anatomy/Startup.blend
+Downloaded 2026-09-10. See anatomy/source for the original archive.
+Archive SHA256: e029688545627bd0214b269e1063143abb580aad72b2c2445d6d8a9a0d9da736
+
+BodyParts3D - The Database Center for Life Science - CC-BY-SA 2.1 Japan
+https://dbarchive.biosciencedbc.jp/en/bodyparts3d/
+Kousaku OKUBO (original model); Gauthier KERVYN (design, 3D, anatomy);
+Marcin ZIELINSKI (Blender add-on). Full contributor list is in the source README.
+
+Source README additionally attributes the following reference/included models:
+- Brainder and White matter, University of Washington
+- Cranial Nerves and Foramina, University of Dundee, CAHID, CC-BY 4.0
+- Anatomy of the Inner Ear, University of Dundee School of Medicine, CC-BY-NC-SA 4.0
+- Kidney, Lissie Cowley, CC-BY-NC 4.0
+These specific notices are retained; this prototype does not claim that the
+repository-wide license eliminates component-specific restrictions. Commercial
+redistribution requires verifying the licenses of the included components.
+
+CHANGES
+Anatomical meshes and curves were extracted and evaluated with Blender 5.2.1.
+Annotation/helper objects and segmentation overlays were excluded. Meshes were
+grouped into selectable systems, some surfaces subdivided and skin boundaries
+welded. New digital-atlas materials were authored. GLB exported for browser use.
+Anatomical mesh derivatives retain the applicable source licenses and attribution.
+The interactive day and organ animations are educational illustrative additions,
+not measured patient data or physiologically validated simulation.
+
+LICENSE LINKS
+https://creativecommons.org/licenses/by-sa/4.0/
+https://creativecommons.org/licenses/by-sa/2.1/jp/
+https://creativecommons.org/licenses/by/4.0/
+https://creativecommons.org/licenses/by-nc/4.0/
+https://creativecommons.org/licenses/by-nc-sa/4.0/

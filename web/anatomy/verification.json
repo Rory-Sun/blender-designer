@@ -1,0 +1,146 @@
+{
+  "checks": [
+    [
+      "model loads",
+      true
+    ],
+    [
+      "collection lettering removed",
+      true
+    ],
+    [
+      "eye and meningeal fragments removed",
+      true
+    ],
+    [
+      "system toggle",
+      true
+    ],
+    [
+      "isolate",
+      true
+    ],
+    [
+      "focus camera tween",
+      true
+    ],
+    [
+      "shell opacity",
+      true
+    ],
+    [
+      "view buttons",
+      true
+    ],
+    [
+      "event states",
+      true
+    ],
+    [
+      "day playback",
+      true
+    ],
+    [
+      "organ animation pause",
+      true
+    ],
+    [
+      "detail tabs",
+      true
+    ],
+    [
+      "structure picker",
+      true
+    ],
+    [
+      "muscle layer",
+      true
+    ],
+    [
+      "anchored labels",
+      true
+    ],
+    [
+      "labels follow anatomy",
+      true
+    ],
+    [
+      "credits dialog",
+      true
+    ],
+    [
+      "mobile layout",
+      true
+    ]
+  ],
+  "errors": [],
+  "state": {
+    "loaded": true,
+    "selected": "heart",
+    "minute": 540,
+    "state": "daily",
+    "playing": false,
+    "motion": true,
+    "isolate": false,
+    "visible": [
+      "accessory",
+      "airway",
+      "armBones",
+      "arteries",
+      "body",
+      "brain",
+      "colon",
+      "esophagus",
+      "heart",
+      "intestine",
+      "kidneyLeft",
+      "kidneyRight",
+      "legBones",
+      "liver",
+      "lungLeft",
+      "lungRight",
+      "nerves",
+      "otherBones",
+      "pelvis",
+      "ribs",
+      "skull",
+      "spine",
+      "stomach",
+      "urinaryTract",
+      "veins"
+    ],
+    "meshCount": 26,
+    "camera": [
+      0,
+      0.9410190831086171,
+      3.4653590737228934
+    ],
+    "manifest": {
+      "sourceObjects": 2332,
+      "groups": 26
+    },
+    "glbBytes": 49505620,
+    "desktop": {
+      "viewport": [
+        1280,
+        720
+      ],
+      "canvas": [
+        745,
+        600
+      ]
+    },
+    "mobile": {
+      "viewport": [
+        375,
+        812
+      ],
+      "scrollWidth": 375,
+      "canvas": [
+        375,
+        650
+      ]
+    },
+    "note": "Checked 2026-09-10 in the embedded Chromium after the second rebuild (lettering, eye, ear and meningeal fragments excluded; MSAA composer target and X-ray bone material). Camera tweens and playback were driven through a timer-based frame loop because the hidden pane suspends requestAnimationFrame."
+  }
+}

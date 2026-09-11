@@ -39,8 +39,18 @@ npm run build --prefix web
 
 静态部署至少需要 `web/index.html`、`web/exhibit.js`、`web/exhibit.css` 和完整 `web/assets/`。详细说明见 [web/README.md](web/README.md)。
 
+## 人体 · 一日
+
+同一仓库内的第二个交互样机：暗色数字人体解剖页面，位于 `anatomy/` 与 `web/anatomy/`。解剖网格来自 Z-Anatomy / BodyParts3D，在本机 Blender 中整理并导出，网页复用仓库已有的 Three.js 与 esbuild。
+
+```sh
+python -m http.server 8899 --bind 127.0.0.1 --directory web
+```
+
+浏览器访问 http://127.0.0.1:8899/anatomy/ 。运行、重建与授权说明见 [anatomy/README.md](anatomy/README.md)。
+
 ## 验证与素材
 
 浏览器交互检查结果见 `web/verification*.json`。场景使用生成的小狗模型、生成的叶片与远景树木贴图，以及 Poly Haven CC0 扫描材质。远景树林采用透明贴片，近景建筑和植被采用三维几何。
 
-独立演示视频工程保存在本地相邻的 `countryside-film` 目录，不属于本仓库。
+独立演示视频工程保存在本地相邻的 `video-build/projects/countryside-film` 目录，不属于本仓库。

@@ -1,0 +1,132 @@
+[
+  {
+    "id": "body",
+    "originalTriangles": 189792,
+    "webTriangles": 99999
+  },
+  {
+    "id": "otherBones",
+    "originalTriangles": 26004,
+    "webTriangles": 26004
+  },
+  {
+    "id": "spine",
+    "originalTriangles": 255440,
+    "webTriangles": 75000
+  },
+  {
+    "id": "ribs",
+    "originalTriangles": 222004,
+    "webTriangles": 74999
+  },
+  {
+    "id": "legBones",
+    "originalTriangles": 279640,
+    "webTriangles": 75000
+  },
+  {
+    "id": "armBones",
+    "originalTriangles": 87456,
+    "webTriangles": 75000
+  },
+  {
+    "id": "skull",
+    "originalTriangles": 139009,
+    "webTriangles": 74999
+  },
+  {
+    "id": "pelvis",
+    "originalTriangles": 44016,
+    "webTriangles": 44016
+  },
+  {
+    "id": "arteries",
+    "originalTriangles": 943376,
+    "webTriangles": 229999
+  },
+  {
+    "id": "veins",
+    "originalTriangles": 455752,
+    "webTriangles": 190000
+  },
+  {
+    "id": "heart",
+    "originalTriangles": 333792,
+    "webTriangles": 109999
+  },
+  {
+    "id": "airway",
+    "originalTriangles": 184672,
+    "webTriangles": 64999
+  },
+  {
+    "id": "lungLeft",
+    "originalTriangles": 18548,
+    "webTriangles": 18548
+  },
+  {
+    "id": "lungRight",
+    "originalTriangles": 23596,
+    "webTriangles": 23596
+  },
+  {
+    "id": "accessory",
+    "originalTriangles": 87344,
+    "webTriangles": 75000
+  },
+  {
+    "id": "colon",
+    "originalTriangles": 19936,
+    "webTriangles": 19936
+  },
+  {
+    "id": "intestine",
+    "originalTriangles": 53456,
+    "webTriangles": 53456
+  },
+  {
+    "id": "liver",
+    "originalTriangles": 12270,
+    "webTriangles": 12270
+  },
+  {
+    "id": "esophagus",
+    "originalTriangles": 3136,
+    "webTriangles": 3136
+  },
+  {
+    "id": "stomach",
+    "originalTriangles": 9468,
+    "webTriangles": 9468
+  },
+  {
+    "id": "kidneyLeft",
+    "originalTriangles": 17892,
+    "webTriangles": 17892
+  },
+  {
+    "id": "kidneyRight",
+    "originalTriangles": 13920,
+    "webTriangles": 13920
+  },
+  {
+    "id": "urinaryTract",
+    "originalTriangles": 33196,
+    "webTriangles": 33196
+  },
+  {
+    "id": "nerves",
+    "originalTriangles": 667214,
+    "webTriangles": 150000
+  },
+  {
+    "id": "brain",
+    "originalTriangles": 594833,
+    "webTriangles": 169997
+  },
+  {
+    "id": "muscles",
+    "originalTriangles": 2137077,
+    "webTriangles": 179999
+  }
+]

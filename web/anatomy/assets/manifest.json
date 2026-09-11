@@ -1,0 +1,188 @@
+{
+  "source": "Z-Anatomy",
+  "groups": [
+    {
+      "system": "muscular",
+      "id": "muscles",
+      "label": "全身肌群",
+      "english": "MUSCULAR SYSTEM",
+      "triangles": 2137077
+    },
+    {
+      "system": "respiratory",
+      "id": "airway",
+      "label": "气管与支气管",
+      "english": "AIRWAYS",
+      "triangles": 184672
+    },
+    {
+      "system": "nervous",
+      "id": "nerves",
+      "label": "脊髓与周围神经",
+      "english": "SPINAL CORD & NERVES",
+      "triangles": 667214
+    },
+    {
+      "system": "circulatory",
+      "id": "arteries",
+      "label": "动脉网络",
+      "english": "ARTERIES",
+      "triangles": 943376
+    },
+    {
+      "system": "circulatory",
+      "id": "veins",
+      "label": "静脉网络",
+      "english": "VEINS",
+      "triangles": 455752
+    },
+    {
+      "system": "nervous",
+      "id": "brain",
+      "label": "脑",
+      "english": "BRAIN",
+      "triangles": 594833
+    },
+    {
+      "system": "digestive",
+      "id": "accessory",
+      "label": "胰腺与胆道",
+      "english": "PANCREAS & BILIARY TRACT",
+      "triangles": 87344
+    },
+    {
+      "system": "shell",
+      "id": "body",
+      "label": "人体外壳",
+      "english": "BODY SURFACE",
+      "triangles": 189792
+    },
+    {
+      "system": "skeletal",
+      "id": "otherBones",
+      "label": "其他骨骼",
+      "english": "SKELETON",
+      "triangles": 26004
+    },
+    {
+      "system": "circulatory",
+      "id": "heart",
+      "label": "心脏",
+      "english": "HEART",
+      "triangles": 333792
+    },
+    {
+      "system": "digestive",
+      "id": "colon",
+      "label": "大肠",
+      "english": "LARGE INTESTINE",
+      "triangles": 19936
+    },
+    {
+      "system": "skeletal",
+      "id": "spine",
+      "label": "脊柱",
+      "english": "VERTEBRAL COLUMN",
+      "triangles": 255440
+    },
+    {
+      "system": "skeletal",
+      "id": "ribs",
+      "label": "胸廓",
+      "english": "THORACIC SKELETON",
+      "triangles": 222004
+    },
+    {
+      "system": "skeletal",
+      "id": "legBones",
+      "label": "下肢骨骼",
+      "english": "LOWER LIMB BONES",
+      "triangles": 279640
+    },
+    {
+      "system": "skeletal",
+      "id": "armBones",
+      "label": "上肢骨骼",
+      "english": "UPPER LIMB BONES",
+      "triangles": 87456
+    },
+    {
+      "system": "digestive",
+      "id": "intestine",
+      "label": "小肠",
+      "english": "SMALL INTESTINE",
+      "triangles": 53456
+    },
+    {
+      "system": "skeletal",
+      "id": "skull",
+      "label": "颅骨",
+      "english": "SKULL",
+      "triangles": 139009
+    },
+    {
+      "system": "skeletal",
+      "id": "pelvis",
+      "label": "骨盆",
+      "english": "PELVIS",
+      "triangles": 44016
+    },
+    {
+      "system": "respiratory",
+      "id": "lungLeft",
+      "label": "左肺",
+      "english": "LEFT LUNG",
+      "triangles": 18548
+    },
+    {
+      "system": "respiratory",
+      "id": "lungRight",
+      "label": "右肺",
+      "english": "RIGHT LUNG",
+      "triangles": 23596
+    },
+    {
+      "system": "urinary",
+      "id": "kidneyLeft",
+      "label": "左肾",
+      "english": "LEFT KIDNEY",
+      "triangles": 17892
+    },
+    {
+      "system": "urinary",
+      "id": "kidneyRight",
+      "label": "右肾",
+      "english": "RIGHT KIDNEY",
+      "triangles": 13920
+    },
+    {
+      "system": "digestive",
+      "id": "liver",
+      "label": "肝脏",
+      "english": "LIVER",
+      "triangles": 12270
+    },
+    {
+      "system": "digestive",
+      "id": "esophagus",
+      "label": "食管",
+      "english": "ESOPHAGUS",
+      "triangles": 3136
+    },
+    {
+      "system": "urinary",
+      "id": "urinaryTract",
+      "label": "膀胱与尿路",
+      "english": "URINARY TRACT",
+      "triangles": 33196
+    },
+    {
+      "system": "digestive",
+      "id": "stomach",
+      "label": "胃",
+      "english": "STOMACH",
+      "triangles": 9468
+    }
+  ],
+  "sourceObjects": 2332
+}

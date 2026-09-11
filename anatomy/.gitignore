@@ -1,0 +1,5 @@
+source/unpacked/
+source/*.zip
+*.blend1
+*.blend2
+Human_Atlas.blend
